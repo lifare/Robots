@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 import log.Logger;
 
@@ -39,20 +41,31 @@ public class MainApplicationFrame extends JFrame
         
         
         LogWindow logWindow = createLogWindow();
+        logWindow.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e){
+                    super.internalFrameOpened(e);
+                    logWindow.exit();
+            }
+        });
         addWindow(logWindow);
-
+        
         GameWindow gameWindow = new GameWindow();
         gameWindow.setSize(400,  400);
         addWindow(gameWindow);
+        
+        
 
         setJMenuBar(generateMenuBar());
+        
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     
     protected LogWindow createLogWindow()
     {
+    	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(10,10);
+        logWindow.setLocation(400,GameWindow.HEIGHT);
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
@@ -64,7 +77,9 @@ public class MainApplicationFrame extends JFrame
     {
         desktopPane.add(frame);
         frame.setVisible(true);
+       
     }
+    
     
 //    protected JMenuBar createMenuBar() {
 //        JMenuBar menuBar = new JMenuBar();
@@ -94,6 +109,14 @@ public class MainApplicationFrame extends JFrame
 // 
 //        return menuBar;
 //    }
+
+    private JMenu createMainMenu()
+    {
+        JMenu file = new JMenu("Меню");
+        JMenuItem exit = new JMenuItem(new ExitAction());
+        file.add(exit);
+        return file;
+    }
     
     private JMenuBar generateMenuBar()
     {
@@ -134,7 +157,7 @@ public class MainApplicationFrame extends JFrame
             });
             testMenu.add(addLogMessageItem);
         }
-
+        menuBar.add(this.createMainMenu());
         menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
         return menuBar;

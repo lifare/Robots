@@ -121,17 +121,17 @@ public class GameVisualizer extends JPanel
         return value;
     }
     
-    private void moveRobot(double velocity, double angularVelocity, double duration)
-    {
-        velocity = applyLimits(velocity, 0, maxVelocity);
-        angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
-        double newX = m_robotPositionX + velocity / angularVelocity * 
-            (Math.sin(m_robotDirection  + angularVelocity * duration) -
-                Math.sin(m_robotDirection));
-        if (!Double.isFinite(newX))
-        {
-            newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
-        }
+    private double getNewCoordinates(double velocity, double angularVelocity, double duration, boolean x) {
+    	if (x) {
+	        	double newX = m_robotPositionX + velocity / angularVelocity * 
+	                (Math.sin(m_robotDirection  + angularVelocity * duration) -
+	                    Math.sin(m_robotDirection));
+	            if (!Double.isFinite(newX))
+	            {
+	                newX = m_robotPositionX + velocity * duration * Math.cos(m_robotDirection);
+	            }
+	            return newX;
+    	}
         double newY = m_robotPositionY - velocity / angularVelocity * 
             (Math.cos(m_robotDirection  + angularVelocity * duration) -
                 Math.cos(m_robotDirection));
@@ -139,10 +139,34 @@ public class GameVisualizer extends JPanel
         {
             newY = m_robotPositionY + velocity * duration * Math.sin(m_robotDirection);
         }
+        return newY;
+    	
+    }
+    
+    private void moveRobot(double velocity, double angularVelocity, double duration)
+    {
+        velocity = applyLimits(velocity, 0, maxVelocity);
+        angularVelocity = applyLimits(angularVelocity, -maxAngularVelocity, maxAngularVelocity);
+        
+        double newX = getNewCoordinates(velocity, angularVelocity, duration, true);
+        double newY = getNewCoordinates(velocity, angularVelocity, duration, false);
         m_robotPositionX = newX;
         m_robotPositionY = newY;
-        double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration); 
-        m_robotDirection = newDirection;
+        if (this.m_robotPositionX > 395 || this.m_robotPositionX < 5 || this.m_robotPositionY > 370 || this.m_robotPositionY < 5) {
+        		double wallAngle = 0;
+        		if (this.m_robotPositionX > 395 || this.m_robotPositionX < 5) {
+        			wallAngle = Math.PI / 2;
+        		}
+        		m_robotDirection = wallAngle*2 - m_robotDirection;
+        		newX = getNewCoordinates(velocity, angularVelocity, duration, true);
+                newY = getNewCoordinates(velocity, angularVelocity, duration, false);
+        }
+        else {
+        	double newDirection = asNormalizedRadians(m_robotDirection + angularVelocity * duration); 
+            m_robotDirection = newDirection;
+        }
+        m_robotPositionX = newX;
+        m_robotPositionY = newY;
     }
 
     private static double asNormalizedRadians(double angle)

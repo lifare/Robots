@@ -10,11 +10,11 @@ public class LogEntry {
 	}
     
 	public String getMessage() {
-		return strMessage;
+		return this.strMessage;
 	}
 
 	public LogLevel getLevel() {
-		return logLevel;
+		return this.logLevel;
 	}
 }
 

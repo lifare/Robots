@@ -12,7 +12,6 @@ public final class Logger {
 	public static void debug(String strMessage) {
 		DEFAULT_LOG_SOURCE.append(LogLevel.Debug, strMessage);
 	}
-    
 	public static void error(String strMessage) {
 		DEFAULT_LOG_SOURCE.append(LogLevel.Error, strMessage);
 	}

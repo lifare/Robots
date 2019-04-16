@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
+import javax.swing.event.InternalFrameEvent;
 
 public class LogWindow extends JInternalFrame implements LogChangeListener
 {
@@ -31,6 +32,10 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
         updateLogContent();
     }
 
+    public void exit(){
+        m_logSource.unregisterListener(this);
+    }
+
     private void updateLogContent()
     {
         StringBuilder content = new StringBuilder();
@@ -47,4 +52,6 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
     {
         EventQueue.invokeLater(this::updateLogContent);
     }
+    
+    
 }
