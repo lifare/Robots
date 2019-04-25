@@ -7,13 +7,13 @@ public final class Logger {
 		DEFAULT_LOG_SOURCE = new LogWindowSource(100);
 	}
 
-	private Logger(){}
+	private Logger() {}
 
 	public static void debug(String strMessage) {
-		DEFAULT_LOG_SOURCE.append(LogLevel.Debug, strMessage);
+		DEFAULT_LOG_SOURCE.append(LogLevel.DEBUG, strMessage);
 	}
 	public static void error(String strMessage) {
-		DEFAULT_LOG_SOURCE.append(LogLevel.Error, strMessage);
+		DEFAULT_LOG_SOURCE.append(LogLevel.ERROR, strMessage);
 	}
 
 	public static LogWindowSource getDefaultLogSource() {

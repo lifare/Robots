@@ -4,15 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ArrayDeque;
 
-/**
- * Что починить:
- * 1. Этот класс порождает утечку ресурсов (связанные слушатели оказываются
- * удерживаемыми в памяти)
- * 2. Этот класс хранит активные сообщения лога, но в такой реализации он 
- * их лишь накапливает. Надо же, чтобы количество сообщений в логе было ограничено 
- * величиной iQueueLength (т.е. реально нужна очередь сообщений 
- * ограниченного размера) 
- */
 public class LogWindowSource {
 	private int iQueueLength;
 	
@@ -48,8 +39,7 @@ public class LogWindowSource {
 		this.messages.add(entry);
 		LogChangeListener [] activeListeners = this.activeListeners;
 		if (activeListeners == null) {
-			synchronized (this.listeners)
-			{
+			synchronized (this.listeners) {
 			    if (this.activeListeners == null) {
 			    	activeListeners = this.listeners.toArray(new LogChangeListener [0]);
 			        this.activeListeners = activeListeners;
