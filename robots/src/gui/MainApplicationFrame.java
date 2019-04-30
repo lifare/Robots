@@ -45,8 +45,11 @@ public class MainApplicationFrame extends JFrame {
             }
         });
         addWindow(logWindow);
-        
-        GameWindow gameWindow = new GameWindow();
+    	ModelRobots robot = new ModelRobots();
+    	WindowСoordinate windowCoordinate = createWindowСoordinate();
+    	robot.addObserver(windowCoordinate);
+    	addWindow(windowCoordinate);
+        GameWindow gameWindow = new GameWindow(robot);
         gameWindow.setSize(400,  400);
         gameWindow.addInternalFrameListener(new InternalFrameAdapter() {
             @Override
@@ -83,6 +86,16 @@ public class MainApplicationFrame extends JFrame {
         Logger.debug("Протокол работает");
         return logWindow;
     }
+    
+    protected WindowСoordinate createWindowСoordinate() {
+    	WindowСoordinate windowCoordinate = new WindowСoordinate();
+    	windowCoordinate.setLocation(610, GameWindow.HEIGHT);
+    	windowCoordinate.setSize(300, 500);
+        setMinimumSize(windowCoordinate.getSize());
+        windowCoordinate.pack();
+        return windowCoordinate;
+    }
+    
     
     protected void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);

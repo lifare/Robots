@@ -61,7 +61,7 @@ public class LogWindowSource {
 	    }
 	    int indexTo = Math.min(startFrom + count, this.messages.size());
 	    ArrayList<LogEntry> result = new ArrayList<LogEntry>();
-	    var i = 0;
+	    int i = 0;
 	    for(LogEntry e : this.messages) {
 	    	if (i == indexTo) {
 	    		result.add(e);
