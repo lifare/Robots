@@ -7,7 +7,7 @@ public final class Logger {
 		DEFAULT_LOG_SOURCE = new LogWindowSource(100);
 	}
 
-	private Logger() {}
+	protected Logger() {}
 
 	public static void debug(String strMessage) {
 		DEFAULT_LOG_SOURCE.append(LogLevel.DEBUG, strMessage);

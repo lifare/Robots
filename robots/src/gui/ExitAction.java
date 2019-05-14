@@ -1,12 +1,13 @@
 package gui;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 class ExitAction extends AbstractAction {
+	private static final long serialVersionUID = -2860012103966789279L;
 	private MainApplicationFrame frame;
-    private static final long serialVersionUID = 1L;
     
     public ExitAction(MainApplicationFrame frame) {
         putValue(NAME, "Выход");
@@ -21,6 +22,8 @@ class ExitAction extends AbstractAction {
 				JOptionPane.QUESTION_MESSAGE, null, options,
 				options[1]);
 		if (n == 0) {
+			WindowSerializer.saveWindowState(frame.logWindow, "log_window.bin");
+			WindowSerializer.saveWindowState(frame.gameWindow, "game_window.bin");
 			frame.unregister();
 			System.exit(0);
 		}

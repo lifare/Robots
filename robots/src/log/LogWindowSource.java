@@ -5,15 +5,21 @@ import java.util.Collections;
 import java.util.ArrayDeque;
 
 public class LogWindowSource {
-	private int iQueueLength;
+
+	private int queueLength;
 	
 	private ArrayDeque<LogEntry> messages;
 	private final ArrayList<LogChangeListener> listeners;
 	private volatile LogChangeListener[] activeListeners;
 	
-	public LogWindowSource(int iQueueLength) {
-		this.iQueueLength = iQueueLength;
-	    this.messages = new ArrayDeque<LogEntry>(iQueueLength);
+	protected LogWindowSource() {
+		this.messages = new ArrayDeque<LogEntry>(queueLength);
+	    this.listeners = new ArrayList<LogChangeListener>();
+	}
+	
+	public LogWindowSource(int queueLength) {
+		this.queueLength = queueLength;
+	    this.messages = new ArrayDeque<LogEntry>(queueLength);
 	    this.listeners = new ArrayList<LogChangeListener>();
 	}
 	
@@ -33,7 +39,7 @@ public class LogWindowSource {
 	
 	public void append(LogLevel logLevel, String strMessage) {
 		LogEntry entry = new LogEntry(logLevel, strMessage);
-		if (this.messages.size() >= this.iQueueLength) {
+		if (this.messages.size() >= this.queueLength) {
 			this.messages.poll();
 		}
 		this.messages.add(entry);
@@ -61,7 +67,7 @@ public class LogWindowSource {
 	    }
 	    int indexTo = Math.min(startFrom + count, this.messages.size());
 	    ArrayList<LogEntry> result = new ArrayList<LogEntry>();
-	    int i = 0;
+	    var i = 0;
 	    for(LogEntry e : this.messages) {
 	    	if (i == indexTo) {
 	    		result.add(e);

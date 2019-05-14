@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyVetoException;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -21,13 +22,12 @@ import javax.swing.event.InternalFrameEvent;
 import log.Logger;
 
 public class MainApplicationFrame extends JFrame {
-   
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4164320483598342028L;
 	private final JDesktopPane desktopPane = new JDesktopPane();
+	public final LogWindow logWindow;
+	public final GameWindow gameWindow;
     
-    public MainApplicationFrame() {
-        //Make the big window be indented 50 pixels from each edge
-        //of the screen.
+    public MainApplicationFrame() throws PropertyVetoException {
         int inset = 50;        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
@@ -35,30 +35,8 @@ public class MainApplicationFrame extends JFrame {
             screenSize.height - inset*2);
         setContentPane(desktopPane);
         
-        LogWindow logWindow = createLogWindow();
-        logWindow.addInternalFrameListener(new InternalFrameAdapter() {
-            @Override
-            public void internalFrameClosing(InternalFrameEvent e) {
-                    super.internalFrameClosing(e);
-                    logWindow.exit();
-                    addOptionPane(e);
-            }
-        });
-        addWindow(logWindow);
-    	ModelRobots robot = new ModelRobots();
-    	WindowСoordinate windowCoordinate = createWindowСoordinate();
-    	robot.addObserver(windowCoordinate);
-    	addWindow(windowCoordinate);
-        GameWindow gameWindow = new GameWindow(robot);
-        gameWindow.setSize(400,  400);
-        gameWindow.addInternalFrameListener(new InternalFrameAdapter() {
-            @Override
-            public void internalFrameClosing(InternalFrameEvent e){
-                    super.internalFrameClosing(e);
-                    addOptionPane(e);
-            }
-        });
-        addWindow(gameWindow);
+        logWindow = createLogWindow();
+        gameWindow = createGameWindow();
         
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -77,25 +55,43 @@ public class MainApplicationFrame extends JFrame {
 		e.getInternalFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
     
-    protected LogWindow createLogWindow() {
+    protected LogWindow createLogWindow() throws PropertyVetoException {
     	LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(400,GameWindow.HEIGHT);
-        logWindow.setSize(300, 800);
-        setMinimumSize(logWindow.getSize());
-        logWindow.pack();
+    	JInternalFrame info = WindowSerializer.loadWindowState("log_window.bin", logWindow);
+    	if (info == null) {
+    		logWindow.setLocation(400, GameWindow.HEIGHT);
+            logWindow.setSize(300, 800);
+    	}
+    	logWindow.pack();
         Logger.debug("Протокол работает");
+        logWindow.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e) {
+                    super.internalFrameClosing(e);
+                    logWindow.exit();
+                    addOptionPane(e);
+            }
+        });
+        addWindow(logWindow);
         return logWindow;
     }
     
-    protected WindowСoordinate createWindowСoordinate() {
-    	WindowСoordinate windowCoordinate = new WindowСoordinate();
-    	windowCoordinate.setLocation(610, GameWindow.HEIGHT);
-    	windowCoordinate.setSize(300, 500);
-        setMinimumSize(windowCoordinate.getSize());
-        windowCoordinate.pack();
-        return windowCoordinate;
+    protected GameWindow createGameWindow() throws PropertyVetoException {
+    	GameWindow gameWindow = new GameWindow();
+    	JInternalFrame info = WindowSerializer.loadWindowState("game_window.bin", gameWindow);
+    	if (info == null) {
+    		gameWindow.setSize(400,  400);
+    	}
+        gameWindow.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e){
+                    super.internalFrameClosing(e);
+                    addOptionPane(e);
+            }
+        });
+        addWindow(gameWindow);
+        return gameWindow;
     }
-    
     
     protected void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);
