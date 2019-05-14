@@ -26,11 +26,11 @@ public class WindowСoordinate extends JInternalFrame  implements Observer {
 	}
    
 	@Override
-	public void update(Observable arg0, Object arg1) {
-		if (arg0 instanceof ModelRobots) {
-			ModelRobots arg = (ModelRobots)arg0;
+	public void update(Observable robot, Object arg1) {
+		if (robot instanceof ModelRobots) {
+			ModelRobots arg = (ModelRobots)robot;
 			StringBuilder content = new StringBuilder();
-			content.append(this.content.getText()).append(arg.getDRobotPositionX()).append(' ').append(arg.getDRobotPositionY()).append("\n");
+			content.append("координатаX:").append(arg.getDRobotPositionX()).append(' ').append("координатаY:").append(arg.getDRobotPositionY()).append("\n");
 	        this.content.setText(content.toString());
 	        this.content.invalidate();	
 		

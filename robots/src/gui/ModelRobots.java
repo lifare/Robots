@@ -20,12 +20,11 @@ public class ModelRobots extends Observable{
         targetPositionY = p.y;
     }
     
-    private void setrobotPosition(double x, double y) {
+    private void setRobotPosition(double x, double y) {
     	this.robotPositionX = x;
     	this.robotPositionY = y;
     	setChanged();
-
-        notifyObservers(new double[] {x,y});
+        notifyObservers();
     }
     
     private static double distance(double x1, double y1, double x2, double y2) {
@@ -86,7 +85,7 @@ public class ModelRobots extends Observable{
         	double newDirection = asNormalizedRadians(robotDirection + angularVelocity * duration); 
             robotDirection = newDirection;
         }
-        setrobotPosition(newX, newY);
+        setRobotPosition(newX, newY);
     }
 
     private static double asNormalizedRadians(double angle) {
@@ -132,8 +131,8 @@ public class ModelRobots extends Observable{
     	return this.robotPositionY;
     }
     
-    public int getRobotDirection() {
-    	return round(this.robotDirection);
+    public double getRobotDirection() {
+    	return this.robotDirection;
     }
     
     public int getTargetPositionX() {
