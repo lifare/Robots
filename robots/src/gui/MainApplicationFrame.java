@@ -36,7 +36,11 @@ public class MainApplicationFrame extends JFrame {
         setContentPane(desktopPane);
         
         logWindow = createLogWindow();
-        gameWindow = createGameWindow();
+    	ModelRobots robot = new ModelRobots();
+    	WindowCoordinate windowCoordinate = createWindowCoordinate();
+    	robot.addObserver(windowCoordinate);
+    	addWindow(windowCoordinate);
+        gameWindow = createGameWindow(robot);
         
         setJMenuBar(generateMenuBar());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -76,8 +80,8 @@ public class MainApplicationFrame extends JFrame {
         return logWindow;
     }
     
-    protected GameWindow createGameWindow() throws PropertyVetoException {
-    	GameWindow gameWindow = new GameWindow();
+    protected GameWindow createGameWindow(ModelRobots robot) throws PropertyVetoException {
+        GameWindow gameWindow = new GameWindow(robot);
     	JInternalFrame info = WindowSerializer.loadWindowState("game_window.bin", gameWindow);
     	if (info == null) {
     		gameWindow.setSize(400,  400);
@@ -96,6 +100,15 @@ public class MainApplicationFrame extends JFrame {
     protected void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);
         frame.setVisible(true);
+    }
+    
+    protected WindowCoordinate createWindowCoordinate() {
+    	WindowCoordinate windowCoordinate = new WindowCoordinate();
+    	windowCoordinate.setLocation(610, GameWindow.HEIGHT);
+    	windowCoordinate.setSize(300, 500);
+        setMinimumSize(windowCoordinate.getSize());
+        windowCoordinate.pack();
+        return windowCoordinate;
     }
     
     

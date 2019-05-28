@@ -10,11 +10,11 @@ import java.util.Observer;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
-public class WindowСoordinate extends JInternalFrame  implements Observer {
+public class WindowCoordinate extends JInternalFrame  implements Observer {
 	
     private TextArea content;
 	
-	public WindowСoordinate() {
+	public WindowCoordinate() {
 		super("Координаты робота", true, true, true);
         content = new TextArea("");
         content.setSize(250, 450);
