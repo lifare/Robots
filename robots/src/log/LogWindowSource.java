@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class LogWindowSource {
 	private int iQueueLength;
 	private volatile int currentQueueSize;
-	
 	private ConcurrentLinkedQueue<LogEntry> messages;
 	private final ConcurrentLinkedQueue<LogChangeListener> listeners;
 	private volatile LogChangeListener[] activeListeners;

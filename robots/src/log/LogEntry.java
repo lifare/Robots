@@ -9,6 +9,8 @@ public class LogEntry {
 		this.logLevel = logLevel;
 	}
     
+	protected LogEntry() {}
+	
 	public String getMessage() {
 		return this.strMessage;
 	}

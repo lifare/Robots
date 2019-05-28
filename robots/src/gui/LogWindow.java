@@ -11,15 +11,26 @@ import log.LogEntry;
 import log.LogWindowSource;
 
 public class LogWindow extends JInternalFrame implements LogChangeListener {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3146835153013483557L;
 	private LogWindowSource logSource;
-    private TextArea logContent;
+	private TextArea logContent;
+    
+    protected LogWindow() {
+    	super();
+    }
 
     public LogWindow(LogWindowSource logSource) {
-        super("Протокол работы", true, true, true, true);
+    	super();
+    	this.title = "Протокол работы";
+    	this.resizable = true;
+    	this.closable = true;
+    	this.maximizable = true;
+    	this.iconable = true;
+    	
         this.logSource = logSource;
         this.logSource.registerListener(this);
-        logContent = new TextArea("");
+        logContent = new TextArea();
+        logContent.setText("");
         logContent.setSize(200, 500);
         
         JPanel panel = new JPanel(new BorderLayout());
@@ -46,6 +57,4 @@ public class LogWindow extends JInternalFrame implements LogChangeListener {
     public void onLogChanged() {
         EventQueue.invokeLater(this::updateLogContent);
     }
-    
-    
 }
