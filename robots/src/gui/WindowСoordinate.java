@@ -2,13 +2,13 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.TextArea;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-
-import log.LogEntry;
 
 public class WindowСoordinate extends JInternalFrame  implements Observer {
 	
@@ -28,9 +28,13 @@ public class WindowСoordinate extends JInternalFrame  implements Observer {
 	@Override
 	public void update(Observable robot, Object arg1) {
 		if (robot instanceof ModelRobots) {
+			DecimalFormat df = new DecimalFormat("#.##");
+			df.setRoundingMode(RoundingMode.CEILING);
 			ModelRobots arg = (ModelRobots)robot;
 			StringBuilder content = new StringBuilder();
-			content.append("координатаX:").append(arg.getDRobotPositionX()).append(' ').append("координатаY:").append(arg.getDRobotPositionY()).append("\n");
+			String x = df.format(arg.getDRobotPositionX());
+			String y = df.format(arg.getDRobotPositionY());
+			content.append("X: ").append(x).append(' ').append(" Y :").append(y).append("\n");
 	        this.content.setText(content.toString());
 	        this.content.invalidate();	
 		
